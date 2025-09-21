@@ -39,17 +39,38 @@ function createElemCity() {
         </div>
     `;
     weatherInfoWrapper.addEventListener('click', () => {
-        const weatherOpen1 = weatherInfoWrapper.querySelector('.open-1');
-        weatherOpen1.classList.toggle('open-1_active')
-        const weatherOpen2 = weatherInfoWrapper.querySelector('.open-2');
-        weatherOpen2.classList.toggle('open-2_active')
-
-        /* const weatherElem = document.createElement('div');
-        weatherElem.classList.add('weather__info__elem');
-        weatherInfoWrapper.appendChild(weatherElem); */
-
-
-
+        eventWeatherInfoCreateElem(weatherInfoWrapper)
     })
 }
+function eventWeatherInfoCreateElem(weatherInfoWrapper) {
+    const weatherOpen1 = weatherInfoWrapper.querySelector('.open-1');
+    weatherOpen1.classList.toggle('open-1_active');
+    const weatherOpen2 = weatherInfoWrapper.querySelector('.open-2');
+    weatherOpen2.classList.toggle('open-2_active');
 
+    if (weatherOpen1.matches('.open.open-1.open-1_active') && weatherOpen2.matches('.open.open-2.open-2_active')) {
+        const weatherInfoDays = document.createElement('div');
+        weatherInfoDays.classList.add('weather__info__days');
+        weatherInfoWrapper.appendChild(weatherInfoDays)
+        weatherInfoDays.innerHTML = `
+            <div class="weather__info__days__content">
+                    Пн <br>
+                    23°C-10°C
+                    </div>
+                    <div class="weather__info__days__content">Пн <br>
+                    23°C-10°C</div>
+                    <div class="weather__info__days__content">Пн <br>
+                    23°C-10°C</div>
+                    <div class="weather__info__days__content">Пн <br>
+                    23°C-10°C</div>
+                    <div class="weather__info__days__content">Пн <br>
+                    23°C-10°C</div>
+                    <div class="weather__info__days__content">Пн <br>
+                    23°C-10°C</div>
+                    <div class="weather__info__days__content border-none">Пн <br>
+                    23°C-10°C</div>
+        `;
+    } else {
+        weatherInfoWrapper.querySelector('.weather__info__days').remove()
+    };
+}
