@@ -33,15 +33,23 @@ function createElemCity() {
     weatherInfoWrapper.innerHTML = `
         <div class="weather__info__city">${cityInput.value}
             <div class="weather__info__city__open">
-                <hr class="open open_1">
-                <hr class="open open_2">
+                <hr class="open open-1">
+                <hr class="open open-2">
             </div>
         </div>
     `;
     weatherInfoWrapper.addEventListener('click', () => {
-        const weatherElem = document.createElement('div');
+        const weatherOpen1 = weatherInfoWrapper.querySelector('.open-1');
+        weatherOpen1.classList.toggle('open-1_active')
+        const weatherOpen2 = weatherInfoWrapper.querySelector('.open-2');
+        weatherOpen2.classList.toggle('open-2_active')
+
+        /* const weatherElem = document.createElement('div');
         weatherElem.classList.add('weather__info__elem');
-        weatherInfoWrapper.appendChild(weatherElem);
+        weatherInfoWrapper.appendChild(weatherElem); */
+
+
+
     })
 }
 
