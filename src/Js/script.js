@@ -25,7 +25,6 @@ async function getWeather(city) {
     try {
         const weatherResponse = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&key=QT8B8GJWGSYK229U3LHVHFCYJ&contentType=json`);
         const weatherData = await weatherResponse.json();
-        //console.log(weatherData);
         createElemCity(weatherData)
     } catch (error) {
         alert('Ошибка')
@@ -52,7 +51,6 @@ function eventWeatherInfoCreateElem(weatherData, weatherInfoWrapper) {
     weatherOpen1.classList.toggle('open-1_active');
     const weatherOpen2 = weatherInfoWrapper.querySelector('.open-2');
     weatherOpen2.classList.toggle('open-2_active');
-    console.log(weatherData);
     if (weatherOpen1.matches('.open.open-1.open-1_active') && weatherOpen2.matches('.open.open-2.open-2_active')) {
         //Даты
         
