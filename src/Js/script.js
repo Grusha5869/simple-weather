@@ -27,7 +27,7 @@ async function getWeather(city) {
         const weatherData = await weatherResponse.json();
         createElemCity(weatherData)
     } catch (error) {
-        alert('Ошибка')
+        alert('Ошибка загрузки')
     }
 }
 function createElemCity(weatherData) {
@@ -42,25 +42,28 @@ function createElemCity(weatherData) {
             </div>
         </div>
     `;
-    weatherInfoWrapper.addEventListener('click', () => {
+    console.log(weatherData);
+    
+    const weatherInfoCity = weatherInfoWrapper.querySelector('.weather__info__city')
+    console.log(weatherInfoCity);
+    weatherInfoCity.addEventListener('click', () => {
         eventWeatherInfoCreateElem(weatherData, weatherInfoWrapper)
     })
 }
 function eventWeatherInfoCreateElem(weatherData, weatherInfoWrapper) {
+    /* let dateTimeFetch = weatherData.days[0].datetime
+    let dateTime = dateTime.split('-') */
+    
     const weatherOpen1 = weatherInfoWrapper.querySelector('.open-1');
     weatherOpen1.classList.toggle('open-1_active');
     const weatherOpen2 = weatherInfoWrapper.querySelector('.open-2');
     weatherOpen2.classList.toggle('open-2_active');
     if (weatherOpen1.matches('.open.open-1.open-1_active') && weatherOpen2.matches('.open.open-2.open-2_active')) {
-        //Даты
-        
-        
-        
         const weatherInfoDays = document.createElement('div');
         weatherInfoDays.classList.add('weather__info__days');
         weatherInfoWrapper.appendChild(weatherInfoDays)
         weatherInfoDays.innerHTML = `
-            <div class="weather__info__days__content">
+            <div class="weather__info__days__content ">
                     ${getDayOfWeek(0)} <br>
                     ${Math.floor(weatherData.days[0].tempmax)}°C-${Math.floor(weatherData.days[0].tempmin)}°C
                     </div>
@@ -77,9 +80,52 @@ function eventWeatherInfoCreateElem(weatherData, weatherInfoWrapper) {
                     <div class="weather__info__days__content border-none">${getDayOfWeek(6)} <br>
                     ${Math.floor(weatherData.days[6].tempmax)}°C-${Math.floor(weatherData.days[6].tempmin)}°C</div>
         `;
+
+        /* const weatherInfoDays = document.querySelector('weather__info__days'); */
+        
+        if (weatherInfoDays) {
+            let weatherInfoDaysArr = weatherInfoDays.querySelectorAll('.weather__info__days__content');
+            weatherInfoDaysArr.forEach(elem => {
+                elem.addEventListener('click', () => {
+                    
+                    if (!eventWeatherInfoCreateElem.counter) {
+                        eventWeatherInfoCreateElem.counter = 0
+                    }
+                    eventWeatherInfoCreateElem.counter++
+
+                    if(eventWeatherInfoCreateElem.counter <= 1) {
+                        const infoHours = document.createElement('div');
+                        infoHours.classList.add('weather__info__hours')
+                        for (let i = 0; i < 12; i++) {
+                            const infoHoursElem = document.createElement('div');
+                            infoHoursElem.classList.add('weather__info__hours__elem')
+
+                            const temp = document.createElement('p');
+                            temp.classList.add('temp');
+                            
+                            const hours = document.createElement('p');
+                            hours.classList.add('hours');
+
+                            //сборка
+                            infoHoursElem.appendChild(temp)
+                            infoHoursElem.appendChild(hours)
+                            infoHours.appendChild(infoHoursElem)
+                            
+                        }
+                        weatherInfoWrapper.appendChild(infoHours)
+                    }
+            })
+        })
+        }
+
     } else {
         let exitWeather = weatherInfoWrapper.querySelector('.weather__info__days');
-        if (exitWeather) exitWeather.remove()
+        let infoHours = weatherInfoWrapper.querySelector('.weather__info__hours')
+        if (exitWeather) {
+            exitWeather.remove()
+            infoHours.remove()
+            eventWeatherInfoCreateElem.counter = 0
+        }
     };
 }
 function getDayOfWeek(i) {
@@ -87,5 +133,5 @@ function getDayOfWeek(i) {
     let date = new Date();
     date.setDate(date.getDate() + i);
     let targetDayIndex = date.getDay()
-    return days[targetDayIndex]
+    return  days[targetDayIndex]
 }

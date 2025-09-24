@@ -12,7 +12,9 @@ body {
     padding: 20px;
     color: #333;
 }
-
+p {
+    margin: 0;
+}
 .weather {
     &__container {
         background: white;
@@ -29,7 +31,6 @@ body {
     }
     &__info {
         margin-top: 1.5rem;
-        text-align: center;
         &__wrapper {
             display: flex;
             flex-wrap: wrap;
@@ -60,21 +61,43 @@ body {
         &__days {
             display: flex;
             flex-wrap: nowrap;
-            gap: 7px;
+            gap: 11px;
             width: 100%;
             height: 100px;
             border: 2px solid #e1e5eb;
             border-radius: 12px;
             font-size: 30px;
             padding: 10px;
+            text-align: center;
             &__content {
                 font-size: 14px;
                 border-right: 2px solid #e1e5eb;
-                transition: all 0.5s ease-in-out;
+                transition: all 0.2s ease-in-out;
+                cursor: pointer;
+                &:hover {
+                    border: none;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                }
+            }
+        }
+        &__hours {
+            height: 70px;
+            width: 100%;
+            border: 2px solid #e1e5eb;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            overflow: auto;
+            padding: 7px;
+            &__elem {
+                text-align: center;
             }
         }
     }
 }
+
 .open {
     border: 2px solid white;
     width: 20px;
@@ -118,40 +141,10 @@ button {
 button:hover {
     background: #3b5bdb;
 }
-.temp {
-    font-size: 3rem;
-    font-weight: bold;
-    margin: 0;
-    color: #2c3e50;
-}
-.city {
-    font-size: 1.5rem;
-    margin: 0.5rem 0;
-    color: #2c3e50;
-}
-.details {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    margin-top: 1.5rem;
-}
-.detail-card {
-    background: #f8f9fa;
-    padding: 1rem;
-    border-radius: 12px;
-    text-align: center;
-}
-.detail-value {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #4a6cf7;
-}
-.detail-label {
-    font-size: 0.9rem;
-    color: #666;
-    margin-top: 0.5rem;
-}
 .border-none {
     border: none;
 }
-
+.hint {
+    margin-bottom: 20px;
+    text-align: center;
+}
