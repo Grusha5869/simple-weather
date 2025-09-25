@@ -51,8 +51,6 @@ function createElemCity(weatherData) {
     })
 }
 function eventWeatherInfoCreateElem(weatherData, weatherInfoWrapper) {
-    /* let dateTimeFetch = weatherData.days[0].datetime
-    let dateTime = dateTime.split('-') */
     
     const weatherOpen1 = weatherInfoWrapper.querySelector('.open-1');
     weatherOpen1.classList.toggle('open-1_active');
@@ -81,7 +79,6 @@ function eventWeatherInfoCreateElem(weatherData, weatherInfoWrapper) {
                     ${Math.floor(weatherData.days[6].tempmax)}°C-${Math.floor(weatherData.days[6].tempmin)}°C</div>
         `;
 
-        /* const weatherInfoDays = document.querySelector('weather__info__days'); */
         
         if (weatherInfoDays) {
             let weatherInfoDaysArr = weatherInfoDays.querySelectorAll('.weather__info__days__content');
@@ -94,17 +91,28 @@ function eventWeatherInfoCreateElem(weatherData, weatherInfoWrapper) {
                     eventWeatherInfoCreateElem.counter++
 
                     if(eventWeatherInfoCreateElem.counter <= 1) {
+                        elem.style.border = 'none';
+                        elem.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.1)'
+
+                        const daysContent = document.querySelector('.weather__info__days__content')
                         const infoHours = document.createElement('div');
-                        infoHours.classList.add('weather__info__hours')
-                        for (let i = 0; i < 12; i++) {
+                        infoHours.classList.add('weather__info__hours');
+
+                        let hoursElemTextContent = checkTempAndHour(elem, weatherData);
+                        console.log(hoursElemTextContent);
+                        
+                        let length = weatherData.days[0].hours.length;
+                        for (let i = 0; i < length; i += 2) {
                             const infoHoursElem = document.createElement('div');
                             infoHoursElem.classList.add('weather__info__hours__elem')
 
                             const temp = document.createElement('p');
                             temp.classList.add('temp');
+                            temp.textContent = `${Math.floor(hoursElemTextContent[0][i].temp) + '°C'}`
                             
                             const hours = document.createElement('p');
                             hours.classList.add('hours');
+                            hours.textContent = `${hoursElemTextContent[0][i].datetime.split(':')[0] + ':' + hoursElemTextContent[0][i].datetime.split(':')[1]}`
 
                             //сборка
                             infoHoursElem.appendChild(temp)
@@ -113,9 +121,10 @@ function eventWeatherInfoCreateElem(weatherData, weatherInfoWrapper) {
                             
                         }
                         weatherInfoWrapper.appendChild(infoHours)
+                        
                     }
+                })
             })
-        })
         }
 
     } else {
@@ -131,7 +140,26 @@ function eventWeatherInfoCreateElem(weatherData, weatherInfoWrapper) {
 function getDayOfWeek(i) {
     const days = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб',];
     let date = new Date();
+    let dateReal = date;
     date.setDate(date.getDate() + i);
     let targetDayIndex = date.getDay()
-    return  days[targetDayIndex]
+    return `${dateReal.getDate()}` + ` ${days[targetDayIndex]}`
+}
+function checkTempAndHour(elem, weatherData) {
+    const hoursElemTextContent = []; 
+    let elemSplit = elem.textContent.split(' ');
+    
+    for (let dataElem of weatherData.days) {
+
+        
+        if (elemSplit[0] == dataElem.datetime.split('-')[2]) {
+            hoursElemTextContent.push(dataElem.hours)
+            return hoursElemTextContent;
+        } else if (dataElem.datetime.split('-')[2][0] == '0') {
+            if (elemSplit[0] == dataElem.datetime.split('-')[2][1]) {
+                hoursElemTextContent.push(dataElem.hours)
+                return hoursElemTextContent;
+            }
+        }
+    }
 }
