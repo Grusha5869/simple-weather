@@ -61,8 +61,7 @@ function eventWeatherInfoCreateElem(weatherData, weatherInfoWrapper) {
         weatherInfoDays.classList.add('weather__info__days');
         weatherInfoWrapper.appendChild(weatherInfoDays)
         weatherInfoDays.innerHTML = `
-            <div class="weather__info__days__content ">
-                    ${getDayOfWeek(0)} <br>
+                    <div class="weather__info__days__content ">${getDayOfWeek(0)} <br>
                     ${Math.floor(weatherData.days[0].tempmax)}°C-${Math.floor(weatherData.days[0].tempmin)}°C
                     </div>
                     <div class="weather__info__days__content">${getDayOfWeek(1)} <br>
@@ -90,9 +89,20 @@ function eventWeatherInfoCreateElem(weatherData, weatherInfoWrapper) {
                     }
                     eventWeatherInfoCreateElem.counter++
 
-                    if(eventWeatherInfoCreateElem.counter <= 1) {
+                    if(eventWeatherInfoCreateElem.counter >= 1) {
+                        weatherInfoDaysArr.forEach(element => {
+                            if (element.style.boxShadow.includes('rgba(0, 0, 0, 0.1) 0px 10px 30px')) {
+                                element.style.boxShadow = '';
+                                element.style.borderRight = '2px solid #e1e5eb'; 
+                            }
+                        })
+                        const existingHours = weatherInfoWrapper.querySelector('.weather__info__hours');
+                        if (existingHours) {
+                            existingHours.remove()
+                        }
+
                         elem.style.border = 'none';
-                        elem.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.1)'
+                        elem.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.1)';
 
                         const daysContent = document.querySelector('.weather__info__days__content')
                         const infoHours = document.createElement('div');
@@ -101,6 +111,10 @@ function eventWeatherInfoCreateElem(weatherData, weatherInfoWrapper) {
                         let hoursElemTextContent = checkTempAndHour(elem, weatherData);
                         console.log(hoursElemTextContent);
                         
+                        if (hoursElemTextContent.length === 0 || hoursElemTextContent[0].length === 0) {
+                            console.error('Не найдены данные для выбранного дня');
+                            return
+                        }
                         let length = weatherData.days[0].hours.length;
                         for (let i = 0; i < length; i += 2) {
                             const infoHoursElem = document.createElement('div');
@@ -109,7 +123,11 @@ function eventWeatherInfoCreateElem(weatherData, weatherInfoWrapper) {
                             const temp = document.createElement('p');
                             temp.classList.add('temp');
                             temp.textContent = `${Math.floor(hoursElemTextContent[0][i].temp) + '°C'}`
+                            console.log(hoursElemTextContent[0][i].temp + 'Pervii');
+                            /* console.log(hoursElemTextContent[i].temp + 'Vtori'); */
                             
+                            
+
                             const hours = document.createElement('p');
                             hours.classList.add('hours');
                             hours.textContent = `${hoursElemTextContent[0][i].datetime.split(':')[0] + ':' + hoursElemTextContent[0][i].datetime.split(':')[1]}`
@@ -120,7 +138,7 @@ function eventWeatherInfoCreateElem(weatherData, weatherInfoWrapper) {
                             infoHours.appendChild(infoHoursElem)
                             
                         }
-                        weatherInfoWrapper.appendChild(infoHours)
+                            weatherInfoWrapper.appendChild(infoHours)
                         
                     }
                 })
@@ -138,28 +156,26 @@ function eventWeatherInfoCreateElem(weatherData, weatherInfoWrapper) {
     };
 }
 function getDayOfWeek(i) {
-    const days = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб',];
+    const days = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
     let date = new Date();
-    let dateReal = date;
     date.setDate(date.getDate() + i);
-    let targetDayIndex = date.getDay()
-    return `${dateReal.getDate()}` + ` ${days[targetDayIndex]}`
+    let targetDayIndex = date.getDay();
+    let dayNumber = date.getDate();
+    
+    return `${dayNumber} ${days[targetDayIndex]}`;
 }
 function checkTempAndHour(elem, weatherData) {
-    const hoursElemTextContent = []; 
     let elemSplit = elem.textContent.split(' ');
+    console.log('текст блока: ' + elemSplit);
+    
+    let dayNumberFromElem = parseInt(elemSplit[0]);
+    console.log('Получаем день: ' + dayNumberFromElem);
     
     for (let dataElem of weatherData.days) {
-
-        
-        if (elemSplit[0] == dataElem.datetime.split('-')[2]) {
-            hoursElemTextContent.push(dataElem.hours)
-            return hoursElemTextContent;
-        } else if (dataElem.datetime.split('-')[2][0] == '0') {
-            if (elemSplit[0] == dataElem.datetime.split('-')[2][1]) {
-                hoursElemTextContent.push(dataElem.hours)
-                return hoursElemTextContent;
-            }
+        let dayNumberFromData = parseInt(dataElem.datetime.split('-')[2]);
+        if (dayNumberFromElem === dayNumberFromData) {
+            return [dataElem.hours];
         }
     }
+    return [];
 }
